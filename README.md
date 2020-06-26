@@ -1,7 +1,7 @@
 # raspberry_python
 
 ## Python project for use with ds9208 zebra scanner in a Raspberry PI 1
-This project allows to use a scanner zebra symbol DS9208 with a raspberry pi1.
+This project allows to use a scanner zebra symbol DS9208 with a raspberry pi1 (for debian linux).
 
 ### Features:
 - Call api REST
