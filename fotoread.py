@@ -12,6 +12,7 @@ from time import sleep
 #****************************************************************************************
 
 #led = LED(17)
+
 def hid2ascii(lst):
     try:
         assert len(lst) == 8, 'Invalid data length (needs 8 bytes)'
@@ -87,6 +88,7 @@ def hid2ascii(lst):
         return conv_table[ch][shift]
     except:
         return '#'
+
 # Find our device using the VID (Vendor ID) and PID (Product ID)
 dev = usb.core.find(idVendor=0x05e0, idProduct=0x1200)
 if dev is None:
@@ -143,32 +145,39 @@ while True:
                     print "Codigo leido: " + line
                     print "  > Largo: " + str(len(line)) + ". Llamando a fotopoc... "
                     
-                    # Llamo a la API de fotopoc
-                    url = 'https://api.bk.fpoc.aa2000.com.ar/api' 
-                    headers = {'Authorization' : 'Key TOKEN', 'Accept': 'application/json'}
-                    #response = requests.get(url,headers=headers)
-                    #print response.status_code 
-                    sleep(10) # Si la respuesta contiene OK entonces abro la puerta, de lo contrario enciendo luz roja
-
-                    print "    > OK, abriendo puerta."
-                    # led.on()
-                    # sleep(3)
-                    # led.off()
+                    # Si la respuesta contiene OK entonces abro la puerta, de lo contrario enciendo luz roja
+                    if (callFotopoc(line)==True):
+                        print "    > OK, abriendo puerta."
+                        # led.on()
+                        # sleep(3)
+                        # led.off()
+                    else:
+                        print "    > OK, no habilitado."
+                        # led.on()
+                        # sleep(0.2)
+                        # led.off()
+                        # sleep(0.2)
+                        # led.on()
+                        # sleep(0.2)
+                        # led.off()
+                        # sleep(0.2)
+                        # led.on()
+                        # sleep(0.2)
+                        # led.off()
+                        # sleep(0.2)
                 else:
                     print "    > Rechazado, la cantidad de caracteres es menor a la de un boarding."
-                    # led.on()
-                    # sleep(0.2)
-                    # led.off()
-                    # sleep(0.2)
-                    # led.on()
-                    # sleep(0.2)
-                    # led.off()
-                    # sleep(0.2)
-                    # led.on()
-                    # sleep(0.2)
-                    # led.off()
-                    # sleep(0.2)
+
             else:
                 print "no se leyo bien el boarding."
             line = ''
             block = False
+
+def callFotopoc(boarding):
+    # Llamo a la API de fotopoc
+    url = 'https://api.bk.fpoc.aa2000.com.ar/api' 
+    headers = {'Authorization' : 'Key TOKEN', 'Accept': 'application/json'}
+    response = requests.get(url,headers=headers)
+    print response.status_code 
+    sleep(10)
+    return True
