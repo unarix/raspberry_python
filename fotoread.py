@@ -13,6 +13,15 @@ from time import sleep
 
 #led = LED(17)
 
+def callFotopoc(boarding):
+    # Llamo a la API de fotopoc
+    url = 'https://api.bk.fpoc.aa2000.com.ar/api' 
+    headers = {'Authorization' : 'Key TOKEN', 'Accept': 'application/json'}
+    response = requests.get(url,headers=headers)
+    print response.status_code 
+    sleep(10)
+    return True
+
 def hid2ascii(lst):
     try:
         assert len(lst) == 8, 'Invalid data length (needs 8 bytes)'
@@ -173,11 +182,4 @@ while True:
             line = ''
             block = False
 
-def callFotopoc(boarding):
-    # Llamo a la API de fotopoc
-    url = 'https://api.bk.fpoc.aa2000.com.ar/api' 
-    headers = {'Authorization' : 'Key TOKEN', 'Accept': 'application/json'}
-    response = requests.get(url,headers=headers)
-    print response.status_code 
-    sleep(10)
-    return True
+
