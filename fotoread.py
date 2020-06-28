@@ -181,5 +181,5 @@ while True:
                 print "no se leyo bien el boarding."
             line = ''
             block = False
-
-
+        except:
+            print "Error desconocido"
