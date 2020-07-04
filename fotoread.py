@@ -182,4 +182,4 @@ while True:
             line = ''
             block = False
         except:
-            print "Error desconocido"
+            print "Error desconocido, debe reiniciar el thread por completo."
