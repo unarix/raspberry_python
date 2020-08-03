@@ -2,7 +2,7 @@ import usb.core
 import usb.util
 import time
 import requests
-
+import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
 #from gpiozero import LED
 from time import sleep
 
@@ -12,8 +12,13 @@ from time import sleep
 #****************************************************************************************
 
 #led = LED(17)
+GPIO.setwarnings(False) # Ignore warning
+GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
+GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input of fotopoc sensor, if pin 10 is HIGH a person is located between the way
+GPIO.setup(11, GPIO.OUT) # Set pin 11 to be an output, this is only for test, turn on a led.
 
 def callFotopoc(boarding):
+    return True
     # Llamo a la API de fotopoc
     url = 'https://api.bk.fpoc.aa2000.com.ar/api' 
     headers = {'Authorization' : 'Key TOKEN', 'Accept': 'application/json'}
@@ -134,7 +139,8 @@ line = ''
 block = False
 
 while True:
-    if block==False:
+    #if block==False:
+    if GPIO.input(10) == GPIO.LOW: # Si el sensor no me advierte de que hay una persona, entonces puedo operar.
         try:
             data = ep.read(1000, 500)  # Espero 0.5 segundos antes de lanzar el except de nodata.
             ch = hid2ascii(data) # Convierto lo que viene del scanner a caracter
@@ -146,8 +152,11 @@ while True:
                 dev.attach_kernel_driver(0)
                 print "Reattachando dispositivo USB al controlador del kernel"
             break
-        except usb.core.USBError:
-            # Timed out. se termino el stream de datos, paso la linea escaneada
+        except usb.core.USBError: # Timed out. se termino el stream de datos, paso la linea escaneada
+            if len(line)>0: # todo: si es mayor a x cant de caracteres es un boarding valido.
+                print "Codigo leido: " + line
+                print "  > Largo: " + str(len(line))
+            
             if (line.startswith('M1') or line.startswith('M1') or line.startswith('M3') or line.startswith('M4')): # Si empieza bien formado lo tengo en cuenta
                 if len(line)>16: # todo: si es mayor a x cant de caracteres es un boarding valido.
                     block=True # Bloqueo el lector para que no entre basura
@@ -157,29 +166,16 @@ while True:
                     # Si la respuesta contiene OK entonces abro la puerta, de lo contrario enciendo luz roja
                     if (callFotopoc(line)==True):
                         print "    > OK, abriendo puerta."
-                        # led.on()
-                        # sleep(3)
-                        # led.off()
+                        GPIO.output(11,GPIO.HIGH) # envio senal al 11 que abra la puerta
+                        sleep(1)
+                        GPIO.output(11,GPIO.LOW) # apago la senal
                     else:
                         print "    > OK, no habilitado."
                         # led.on()
                         # sleep(0.2)
                         # led.off()
-                        # sleep(0.2)
-                        # led.on()
-                        # sleep(0.2)
-                        # led.off()
-                        # sleep(0.2)
-                        # led.on()
-                        # sleep(0.2)
-                        # led.off()
-                        # sleep(0.2)
                 else:
                     print "    > Rechazado, la cantidad de caracteres es menor a la de un boarding."
-
-            else:
-                print "no se leyo bien el boarding."
             line = ''
-            block = False
         except:
             print "Error desconocido, debe reiniciar el thread por completo."
