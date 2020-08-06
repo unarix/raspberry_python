@@ -3,6 +3,8 @@
 ## Uso de ds9208 zebra scanner en Raspberry PI 1
 Este proyecto permite el uso del scanner zebra symbol DS9208 con un raspberry pi1 (sobre debian linux). Ante el evento del barcodereader dispara los siguientes checks:
 
+_This project allows the use of the zebra symbol DS9208 scanner with a raspberry pi1 (on debian linux). In the event of the barcodereader it triggers the following checks:_
+
 - Si sensor de ocupación == 'False'
 - Validar largo del código leído > 16
 - Validar que sea un código (M1/M2/M3)
@@ -14,9 +16,9 @@ Este proyecto permite el uso del scanner zebra symbol DS9208 con un raspberry pi
 - Barcode Zebra scanner PDF417 support -> OK
 - Decode barcode ascii -> OK 
 - Suppont for GPIO interface IN/OUT -> OK
-- Obtener estado del sensor de ocupación -> OK
-- Permitir el paso (abrir puerta) -> OK
-- Call Fotopoc api REST -> OK
+- Obtain status sensro occupancy -> OK
+- Permitir el paso _open the door_ -> OK
+- Call api REST -> OK
 
 ## GPIO Connections:
 - Puerta / Gate:
@@ -27,17 +29,18 @@ Este proyecto permite el uso del scanner zebra symbol DS9208 con un raspberry pi
 - >N: PIN 1
 - >P: PIN 10
 
-## Referencia de conectores:
+## Referencia de conectores _Connectors Reference_:
 
 ![alt text](https://raspberrypihq.com/wp-content/uploads/2018/01/a-and-b-physical-pin-numbers.png)
 
-## Uso:
+## Uso _Use_:
 
 >$ python fotoread.py
 
-## Script de inicializaion:
+## Script de inicializaion _Initialization script_:
 
 **Crear el script y agregar al archivo:**
+_Create the script and add to the file:_
 
 >$ nano launcher.sh
 ```
@@ -49,10 +52,12 @@ Este proyecto permite el uso del scanner zebra symbol DS9208 con un raspberry pi
     cd/
 ```
 **Permitir que sea ejecutable:**
+_Allow it to be executable:_
 
 >$ chmod 755 launcher.sh
 
 **Iniciar en el startup:**
+_Launch at startup_
 
 >$ sudo nano /home/pi/.bashrc
 
