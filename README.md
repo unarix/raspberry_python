@@ -1,4 +1,4 @@
-# Raspberry_Python (boarding access control)
+# Boarding access control gateways
 
 ## Use of DS9208 Zebra scanner on Raspberry PI 1
 
