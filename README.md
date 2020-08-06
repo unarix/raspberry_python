@@ -1,46 +1,46 @@
 # raspberry_python
 
-## Uso de ds9208 zebra scanner en Raspberry PI 1
+## Use of DS9208 Zebra scanner on Raspberry PI 1
+
 Este proyecto permite el uso del scanner zebra symbol DS9208 con un raspberry pi1 (sobre debian linux). Ante el evento del barcodereader dispara los siguientes checks:
 
 _This project allows the use of the zebra symbol DS9208 scanner with a raspberry pi1 (on debian linux). In the event of the barcodereader it triggers the following checks:_
 
-- Si sensor de ocupación == 'False'
-- Validar largo del código leído > 16
-- Validar que sea un código (M1/M2/M3)
-- Validar contra API
-- Respuesta OK permitir el paso
-- Otros
+- if occupancy sensor == 'False'
+- Validate lenght code > 16
+- Validate code type (M1/M2/M3)
+- Validate code with API
+- Response OK allow enter
+- others
 
 ### Features:
 - Barcode Zebra scanner PDF417 support -> OK
 - Decode barcode ascii -> OK 
 - Suppont for GPIO interface IN/OUT -> OK
 - Obtain status sensro occupancy -> OK
-- Permitir el paso _open the door_ -> OK
+- Open door -> OK
 - Call api REST -> OK
 
 ## GPIO Connections:
-- Puerta / Gate:
+- To the gate:
 - >N: PIN 6
 - >P: PIN 11
 
-- Ocupación / Sensor:
+- To the occupancy sensor:
 - >N: PIN 1
 - >P: PIN 10
 
-## Referencia de conectores _Connectors Reference_:
+## Connectors Reference:
 
 ![alt text](https://raspberrypihq.com/wp-content/uploads/2018/01/a-and-b-physical-pin-numbers.png)
 
-## Uso _Use_:
+## How to use:
 
 >$ python fotoread.py
 
-## Script de inicializaion _Initialization script_:
+## Initialization script:
 
-**Crear el script y agregar al archivo:**
-_Create the script and add to the file:_
+**Create the script and add to the file:**
 
 >$ nano launcher.sh
 ```
@@ -51,13 +51,12 @@ _Create the script and add to the file:_
     python fotoread.py
     cd/
 ```
-**Permitir que sea ejecutable:**
-_Allow it to be executable:_
+
+**Allow it to be executable:**
 
 >$ chmod 755 launcher.sh
 
-**Iniciar en el startup:**
-_Launch at startup_
+**Launch at startup**
 
 >$ sudo nano /home/pi/.bashrc
 
