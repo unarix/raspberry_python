@@ -18,14 +18,16 @@ GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input 
 GPIO.setup(11, GPIO.OUT) # Set pin 11 to be an output, this is only for test, turn on a led.
 
 def callFotopoc(boarding):
-    return True
-    # Llamo a la API de fotopoc
-    url = 'https://api.bk.fpoc.aa2000.com.ar/api' 
-    headers = {'Authorization' : 'Key TOKEN', 'Accept': 'application/json'}
-    response = requests.get(url,headers=headers)
-    print response.status_code 
-    sleep(10)
-    return True
+    # return True
+    # Call API fotopoc
+    url = "http://api.fpoc.corp.aa2000.com.ar/api/Boarding/GetBoardingDataPOC?line=" + boarding + "&idPoc=10.218.0.58&idarpt=EZE/C&usuario=NTELLO&movtp=I&tasap=I&idpocDesc=NTELLO"
+    payload = {}
+    headers = {
+    'key': 'TOKEN'
+    }
+    response = requests.request("GET", url, headers=headers, data = payload)
+    print(response.text.encode('utf8'))
+    return ("DiaJuliano" in response.text.encode('utf8'))
 
 def hid2ascii(lst):
     try:
