@@ -20,14 +20,18 @@ GPIO.setup(11, GPIO.OUT) # Set pin 11 to be an output, this is only for test, tu
 def callFotopoc(boarding):
     # return True
     # Call API fotopoc
-    url = "http://api.fpoc.corp.aa2000.com.ar/api/Boarding/GetBoardingDataPOC?line=" + boarding + "&idPoc=10.218.0.58&idarpt=EZE/C&usuario=NTELLO&movtp=I&tasap=I&idpocDesc=NTELLO"
-    payload = {}
-    headers = {
-    'key': 'TOKEN'
-    }
-    response = requests.request("GET", url, headers=headers, data = payload)
-    print(response.text.encode('utf8'))
-    return ("DiaJuliano" in response.text.encode('utf8'))
+    try:
+        url = "http://api.fpoc.corp.aa2000.com.ar/api/Boarding/GetBoardingDataPOC?line=" + boarding + "&idPoc=10.218.0.58&idarpt=EZE/C&usuario=NTELLO&movtp=I&tasap=I&idpocDesc=NTELLO"
+        payload = {}
+        headers = {
+        'key': 'TOKEN'
+        }
+        response = requests.request("GET", url, headers=headers, data = payload)
+        print(response.text.encode('utf8'))
+        return ("DiaJuliano" in response.text.encode('utf8'))
+    except:
+        print("Error en la llamada fotopoc")
+        return False
 
 def hid2ascii(lst):
     try:
