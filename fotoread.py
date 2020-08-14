@@ -3,25 +3,32 @@ import usb.util
 import time
 import requests
 import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
-#from gpiozero import LED
+import json
 from time import sleep
 
 # ****************************************************************************************
 # Registro de cambios
 # nhtello 25/6/2020: initial
+# nhtello 13/8/2020: demo onsite
 #****************************************************************************************
 
-#led = LED(17)
 GPIO.setwarnings(False) # Ignore warning
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
 GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input of fotopoc sensor, if pin 10 is HIGH a person is located between the way
 GPIO.setup(11, GPIO.OUT) # Set pin 11 to be an output, this is only for test, turn on a led.
 
+# Load fpoc config from conf.json file, example:
+# {
+#     "url":"http://sample.com.ar/GetBoardingDataPOC?line=",
+#     "params":"&idPoc=10.218.0.58&idarpt=EZE/C&usuario=NTELLO&movtp=I&tasap=I&idpocDesc=NTELLO",
+# }
+with open("config.json") as conf_file:
+    conf = json.load(conf_file)
+
 def callFotopoc(boarding):
-    # return True
     # Call API fotopoc
     try:
-        url = "http://api.fpoc.corp.aa2000.com.ar/api/Boarding/GetBoardingDataPOC?line=" + boarding + "&idPoc=10.218.0.58&idarpt=EZE/C&usuario=NTELLO&movtp=I&tasap=I&idpocDesc=NTELLO"
+        url = conf["url"] + boarding + conf["params"]
         payload = {}
         headers = {
         'key': 'TOKEN'
@@ -142,10 +149,7 @@ assert ep is not None, "Endpoint del dispositivo USB no encontrado. Algo esta ma
 # Loop through a series of 8-byte transactions and convert each to an
 # ASCII character. Print output after 0.5 seconds of no data.
 line = ''
-block = False
-
 while True:
-    #if block==False:
     if GPIO.input(10) == GPIO.LOW: # Si el sensor no me advierte de que hay una persona, entonces puedo operar.
         try:
             data = ep.read(1000, 500)  # Espero 0.5 segundos antes de lanzar el except de nodata.
@@ -156,7 +160,7 @@ while True:
             dev.reset()
             if needs_reattach:
                 dev.attach_kernel_driver(0)
-                print "Reattachando dispositivo USB al controlador del kernel"
+                print "Reatachando dispositivo USB al controlador del kernel"
             break
         except usb.core.USBError: # Timed out. se termino el stream de datos, paso la linea escaneada
             if len(line)>0: # todo: si es mayor a x cant de caracteres es un boarding valido.
@@ -165,7 +169,6 @@ while True:
             
             if (line.startswith('M1') or line.startswith('M1') or line.startswith('M3') or line.startswith('M4')): # Si empieza bien formado lo tengo en cuenta
                 if len(line)>16: # todo: si es mayor a x cant de caracteres es un boarding valido.
-                    block=True # Bloqueo el lector para que no entre basura
                     print "Codigo leido: " + line
                     print "  > Largo: " + str(len(line)) + ". Llamando a fotopoc... "
                     
@@ -177,9 +180,6 @@ while True:
                         GPIO.output(11,GPIO.LOW) # apago la senal
                     else:
                         print "    > OK, no habilitado."
-                        # led.on()
-                        # sleep(0.2)
-                        # led.off()
                 else:
                     print "    > Rechazado, la cantidad de caracteres es menor a la de un boarding."
             line = ''
