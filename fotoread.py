@@ -163,7 +163,7 @@ while True:
                 print "Reatachando dispositivo USB al controlador del kernel"
             break
         except usb.core.USBError: # Timed out. se termino el stream de datos, paso la linea escaneada
-            if len(line)>0: # todo: si es mayor a x cant de caracteres es un boarding valido.
+            if len(line)>10: # Si es mayor a 10 (cant) de caracteres aparentemente no es basura, me fijo si empieza con M1/M2/M3.
                 print "Codigo leido: " + line
                 print "  > Largo: " + str(len(line))
             
